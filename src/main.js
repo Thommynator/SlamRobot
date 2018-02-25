@@ -3,7 +3,7 @@ var robot
 
 function setup() {
     createCanvas(800, 600)
-    maze = new Maze(800, 600).createMaze()
+    maze = new Maze(width / 2, height).createMaze()
     robot = new Robot(200, 200, 0)
     background(55)
     image(maze, 0, 0)
