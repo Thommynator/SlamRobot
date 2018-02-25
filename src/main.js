@@ -13,5 +13,6 @@ function draw() {
     background(55)
     image(maze, 0, 0)
     robot.update()
+    robot.measure()
     robot.show()
 }
