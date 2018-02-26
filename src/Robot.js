@@ -4,25 +4,49 @@ function Robot(xPos, yPos, heading) {
     this.heading = heading
     this.w = 10
     this.h = 15
-    this.sensorRange = 100.0
-    this.nSensors = 9
-    this.dist = Array(this.nSensors).fill(0.0)
+    this.sensorRange = 200.0
+    this.nSensors = 50
+    this.distances = Array(this.nSensors).fill(0.0)
+
+    this.measure = function (maze) {
+        var fov = HALF_PI
+        var startAngle = -QUARTER_PI
+        var angleIncrement = fov / this.nSensors
+
+        for (var i = 0; i < this.nSensors; i++) {
+            let angle = this.heading + startAngle + i * angleIncrement
+            var endX = this.x + sin(angle) * this.sensorRange
+            var endY = this.y + cos(angle) * this.sensorRange
+
+            var cellsBetween = pixelsBetweenPoints(this.x, this.y, endX, endY)
+
+            fill(255, 0, 0, 128)
+            vertex(this.x, this.y)
+            for (var j = 0; j < cellsBetween.length; j++) {
+                // collision
+                if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
+                    ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
+                    break
+                }
+            }
+        }
+    }
 
     this.moveForward = function () {
-        this.x += sin(this.heading) * 2
-        this.y += cos(this.heading) * 2
+        this.x = Math.round(this.x + sin(this.heading) * 2)
+        this.y =  Math.round(this.y + cos(this.heading) * 2)
         this.checkBorders()
     }
 
     this.moveBackward = function () {
-        this.x -= sin(this.heading)
-        this.y -= cos(this.heading)
+        this.x =  Math.round(this.x - sin(this.heading))
+        this.y =  Math.round(this.y - cos(this.heading))
         this.checkBorders()
     }
 
     /** 
      * Constrain robot position to map borders.
-    */
+     */
     this.checkBorders = function () {
         if (this.x > maze.width) {
             this.x = maze.width
@@ -36,21 +60,6 @@ function Robot(xPos, yPos, heading) {
         }
     }
 
-    this.measure = function () {
-        var fov = HALF_PI
-        var startAngle = QUARTER_PI
-        var angleIncrement = fov / this.nSensors
-
-        for (let i = 0; i < this.nSensors; i++) {
-            let angle = startAngle + i * angleIncrement
-
-            var dx = sin(angle) * this.sensorRange
-            var dy = cos(angle) * this.sensorRange
-
-            var pix = pixelsBetweenPoints(this.x, this.y, this.x + dx, this.y + dy)
-            pix.forEach(p => point(p.x, p.y))
-        }
-    }
 
     this.update = function () {
         if (keyIsDown(UP_ARROW)) {
@@ -73,11 +82,13 @@ function Robot(xPos, yPos, heading) {
         rotate(-this.heading)
 
         // draw arc
-        fill(100, 100, 255, 30)
+        noStroke()
+        fill(255, 255, 255, 30)
         var startAngle = QUARTER_PI
         arc(0, this.w / 2, 2 * this.sensorRange, 2 * this.sensorRange, startAngle, startAngle + HALF_PI)
 
         // draw robot
+        stroke(0)
         fill(100, 100, 255)
         strokeWeight(2)
         ellipseMode(CENTER)

@@ -8,7 +8,6 @@
  * @param {int} y2 is the y-coordinate fom the second point
  */
 function pixelsBetweenPoints(x1, y1, x2, y2) {
-
     var dx = x2 - x1
     var dy = y2 - y1
 
@@ -57,4 +56,14 @@ function areEqual(x, y) {
     var newX = Math.round(parseFloat(x) * eps) / eps
     var newY = Math.round(parseFloat(y) * eps) / eps
     return Math.abs(newX - newY) < (1 / eps)
+}
+
+/**
+ * Converts a 2D coordinate into a single index.
+ * @param {int} x coordinate (= column)
+ * @param {int} y coordinate (= row)
+ * @param {int} w width
+ */
+function convertXYtoIndex(x, y, w) {
+    return x + y * w
 }
