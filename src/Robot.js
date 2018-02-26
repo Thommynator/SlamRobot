@@ -13,18 +13,19 @@ function Robot(xPos, yPos, heading) {
         var startAngle = -QUARTER_PI
         var angleIncrement = fov / this.nSensors
 
-        for (var i = 0; i < this.nSensors; i++) {
-            let angle = this.heading + startAngle + i * angleIncrement
+        for (var sensorIdx = 0; sensorIdx < this.nSensors; sensorIdx++) {
+            let angle = this.heading + startAngle + sensorIdx * angleIncrement
             var endX = this.x + sin(angle) * this.sensorRange
             var endY = this.y + cos(angle) * this.sensorRange
 
             var cellsBetween = pixelsBetweenPoints(this.x, this.y, endX, endY)
 
-            fill(255, 0, 0, 128)
+            fill(255, 0, 0)
             vertex(this.x, this.y)
             for (var j = 0; j < cellsBetween.length; j++) {
                 // collision
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
+                    this.distances[sensorIdx] = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
                     break
                 }
