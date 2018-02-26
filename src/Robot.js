@@ -23,7 +23,7 @@ function Robot(xPos, yPos, heading) {
             fill(255, 0, 0)
             vertex(this.x, this.y)
             for (var j = 0; j < cellsBetween.length; j++) {
-                // collision
+                // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
                     this.distances[sensorIdx] = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
@@ -34,31 +34,34 @@ function Robot(xPos, yPos, heading) {
     }
 
     this.moveForward = function () {
-        this.x = Math.round(this.x + sin(this.heading) * 2)
-        this.y =  Math.round(this.y + cos(this.heading) * 2)
-        this.checkBorders()
+        let newX = Math.round(this.x + sin(this.heading) * 2)
+        let newY = Math.round(this.y + cos(this.heading) * 2)
+        if(!this.isBlocked(newX, newY)){
+            this.x = newX
+            this.y = newY
+        }
     }
 
     this.moveBackward = function () {
-        this.x =  Math.round(this.x - sin(this.heading))
-        this.y =  Math.round(this.y - cos(this.heading))
-        this.checkBorders()
+        let newX = Math.round(this.x - sin(this.heading))
+        let newY = Math.round(this.y - cos(this.heading))
+        if(!this.isBlocked(newX, newY)){
+            this.x = newX
+            this.y = newY
+        }
     }
 
     /** 
      * Constrain robot position to map borders.
      */
-    this.checkBorders = function () {
-        if (this.x > maze.width) {
-            this.x = maze.width
-        } else if (this.x < 0) {
-            this.x = 0
+    this.isBlocked = function (x, y) {
+        if (x > maze.width || x < 0) {
+            return true
         }
-        if (this.y > maze.height) {
-            this.y = maze.height
-        } else if (this.y < 0) {
-            this.y = 0
+        if (y > maze.height || y < 0) {
+            return true
         }
+        return maze.blocked[convertXYtoIndex(x, y, maze.width)]
     }
 
 
