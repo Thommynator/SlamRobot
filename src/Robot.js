@@ -52,7 +52,9 @@ function Robot(xPos, yPos, heading) {
     }
 
     /** 
-     * Constrain robot position to map borders.
+     * Check if a cell (x,y) is blocked.
+     * Blocked means, that it might be outside of the map 
+     * or not accessible because of walls/ostacles.
      */
     this.isBlocked = function (x, y) {
         if (x > maze.width || x < 0) {
