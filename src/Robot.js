@@ -5,13 +5,13 @@ function Robot(xPos, yPos, heading) {
     this.w = 10
     this.h = 15
     this.sensorRange = 200.0
+    this.fov = 2 * QUARTER_PI
     this.nSensors = 50
     this.distances = Array(this.nSensors).fill(0.0)
 
     this.measure = function (maze) {
-        var fov = HALF_PI
-        var startAngle = -QUARTER_PI
-        var angleIncrement = fov / this.nSensors
+        var startAngle = -this.fov / 2
+        var angleIncrement = this.fov / this.nSensors
 
         for (var sensorIdx = 0; sensorIdx < this.nSensors; sensorIdx++) {
             let angle = this.heading + startAngle + sensorIdx * angleIncrement
@@ -36,7 +36,7 @@ function Robot(xPos, yPos, heading) {
     this.moveForward = function () {
         let newX = Math.round(this.x + sin(this.heading) * 2)
         let newY = Math.round(this.y + cos(this.heading) * 2)
-        if(!this.isBlocked(newX, newY)){
+        if (!this.isBlocked(newX, newY)) {
             this.x = newX
             this.y = newY
         }
@@ -45,7 +45,7 @@ function Robot(xPos, yPos, heading) {
     this.moveBackward = function () {
         let newX = Math.round(this.x - sin(this.heading))
         let newY = Math.round(this.y - cos(this.heading))
-        if(!this.isBlocked(newX, newY)){
+        if (!this.isBlocked(newX, newY)) {
             this.x = newX
             this.y = newY
         }
@@ -90,8 +90,9 @@ function Robot(xPos, yPos, heading) {
         // draw arc
         noStroke()
         fill(255, 255, 255, 30)
-        var startAngle = QUARTER_PI
-        arc(0, this.w / 2, 2 * this.sensorRange, 2 * this.sensorRange, startAngle, startAngle + HALF_PI)
+        // arc 0 angle starts right, increasing clock-wise
+        var startAngle = HALF_PI - this.fov / 2
+        arc(0, 0, 2 * this.sensorRange, 2 * this.sensorRange, startAngle, startAngle + this.fov)
 
         // draw robot
         stroke(0)
