@@ -7,9 +7,17 @@ function Robot(xPos, yPos, heading) {
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
     this.nSensors = 100
-    this.distances = Array(this.nSensors).fill(0.0)
+    this.measurements = Array(this.nSensors).fill(undefined)
 
+    /**
+     * Measures the measurements (distances & angles) from the robot to its surroundings.
+     * It's like a virtual LIDAR sensor.
+     * The values are measured from right to left.
+     * A measurement is 'undefined' if there is no obstacle in sensor range.
+     * @param {Maze} maze 
+     */
     this.measure = function (maze) {
+        this.measurement = Array(this.nSensors).fill(undefined)
         var startAngle = -this.fov / 2
         var angleIncrement = this.fov / this.nSensors
 
@@ -20,16 +28,19 @@ function Robot(xPos, yPos, heading) {
 
             var cellsBetween = pixelsBetweenPoints(this.x, this.y, endX, endY)
 
+            stroke(0)
             fill(255, 0, 0)
             for (var j = 0; j < cellsBetween.length; j++) {
                 // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
-                    this.distances[sensorIdx] = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
+                    let distance = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
+                    this.measurement[sensorIdx] = {angle: angle, dist: distance}
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
                     break
                 }
             }
         }
+        // console.log(this.measurement)
     }
 
     this.moveForward = function () {
@@ -91,7 +102,7 @@ function Robot(xPos, yPos, heading) {
 
         // draw arc
         noStroke()
-        fill(255, 255, 255, 30)
+        fill(0, 20)
         // arc 0 angle starts right, increasing clock-wise
         var startAngle = HALF_PI - this.fov / 2
         arc(0, 0, 2 * this.sensorRange, 2 * this.sensorRange, startAngle, startAngle + this.fov)

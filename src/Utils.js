@@ -60,10 +60,21 @@ function areEqual(x, y) {
 
 /**
  * Converts a 2D coordinate into a single index.
- * @param {int} x coordinate (= column)
- * @param {int} y coordinate (= row)
- * @param {int} w width
+ * @param {float} x coordinate (= column)
+ * @param {float} y coordinate (= row)
+ * @param {float} w width
  */
 function convertXYtoIndex(x, y, w) {
     return floor(x) + floor(y) * w
+}
+
+/**
+ * Converts a 2D polar-coordinate to a 2D cartesian-coordinate.
+ * @param {float} angle 
+ * @param {float} dist 
+ */
+function convertPolarToCartesian(angle, dist) {
+    let x = sin(angle) * dist
+    let y = cos(angle) * dist
+    return { x: x, y: y }
 }
