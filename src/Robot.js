@@ -6,7 +6,7 @@ function Robot(xPos, yPos, heading) {
     this.h = 15
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
-    this.nSensors = 50
+    this.nSensors = 100
     this.distances = Array(this.nSensors).fill(0.0)
 
     this.measure = function (maze) {
@@ -21,7 +21,6 @@ function Robot(xPos, yPos, heading) {
             var cellsBetween = pixelsBetweenPoints(this.x, this.y, endX, endY)
 
             fill(255, 0, 0)
-            vertex(this.x, this.y)
             for (var j = 0; j < cellsBetween.length; j++) {
                 // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
@@ -34,8 +33,8 @@ function Robot(xPos, yPos, heading) {
     }
 
     this.moveForward = function () {
-        let newX = Math.round(this.x + sin(this.heading) * 2)
-        let newY = Math.round(this.y + cos(this.heading) * 2)
+        let newX = this.x + sin(this.heading) * 2
+        let newY = this.y + cos(this.heading) * 2
         if (!this.isBlocked(newX, newY)) {
             this.x = newX
             this.y = newY
@@ -43,8 +42,8 @@ function Robot(xPos, yPos, heading) {
     }
 
     this.moveBackward = function () {
-        let newX = Math.round(this.x - sin(this.heading))
-        let newY = Math.round(this.y - cos(this.heading))
+        let newX = this.x - sin(this.heading)
+        let newY = this.y - cos(this.heading)
         if (!this.isBlocked(newX, newY)) {
             this.x = newX
             this.y = newY
@@ -57,6 +56,9 @@ function Robot(xPos, yPos, heading) {
      * or not accessible because of walls/ostacles.
      */
     this.isBlocked = function (x, y) {
+        x = floor(x)
+        y = floor(y)
+
         if (x > maze.width || x < 0) {
             return true
         }

@@ -65,5 +65,5 @@ function areEqual(x, y) {
  * @param {int} w width
  */
 function convertXYtoIndex(x, y, w) {
-    return x + y * w
+    return floor(x) + floor(y) * w
 }
