@@ -2,6 +2,7 @@ function Maze(width, height) {
     this.width = width
     this.height = height
     this.blocked = Array(this.width * this.height).fill(false)
+    this.amountOfBlocks = 15
     
     this.createMap = function () {
         this.map = createGraphics(this.width, this.height)
@@ -9,7 +10,7 @@ function Maze(width, height) {
         // draw walls
         this.map.fill(220)
         this.map.stroke(20)
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < this.amountOfBlocks; i++) {
             this.map.rect(
                 random(this.width),
                 random(this.height),

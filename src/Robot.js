@@ -34,13 +34,24 @@ function Robot(xPos, yPos, heading) {
                 // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
                     let distance = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
-                    this.measurement[sensorIdx] = {angle: angle, dist: distance}
+                    this.measurement[sensorIdx] = { angle: angle, dist: distance }
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
                     break
                 }
             }
         }
-        // console.log(this.measurement)
+        var points2D = []
+        this.measurement.forEach(m => {
+            if (m) {
+                let point = convertPolarToCartesian(m.angle, m.dist)
+                points2D.push({ x: point.x, y: point.y })
+            }
+        })
+
+        // console.log(points2D)
+        var ransac = new RANSAC(points2D)
+        ransac.analyze()
+        console.log('consensus', ransac.consensus)
     }
 
     this.moveForward = function () {
