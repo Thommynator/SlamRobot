@@ -6,7 +6,7 @@ function Robot(xPos, yPos, heading) {
     this.h = 15
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
-    this.nSensors = 100
+    this.nSensors = 50
     this.measurements = Array(this.nSensors).fill(undefined)
 
     /**
@@ -44,14 +44,12 @@ function Robot(xPos, yPos, heading) {
         this.measurement.forEach(m => {
             if (m) {
                 let point = convertPolarToCartesian(m.angle, m.dist)
-                points2D.push({ x: point.x, y: point.y })
+                points2D.push({ x: this.x + point.x, y: this.y + point.y })
             }
         })
 
-        // console.log(points2D)
         var ransac = new RANSAC(points2D)
         ransac.analyze()
-        console.log('consensus', ransac.consensus)
     }
 
     this.moveForward = function () {

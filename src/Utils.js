@@ -78,3 +78,24 @@ function convertPolarToCartesian(angle, dist) {
     let y = cos(angle) * dist
     return { x: x, y: y }
 }
+
+
+function test() {
+    console.log('test')
+    var points = []
+    for (var x = 500; x < 600; x++) {
+        var y = 300 + random(5)
+        points.push({ x: x, y: y })
+        ellipse(x, y, 5, 5)
+    }
+
+    for (var x = 500; x < 600; x++) {
+        var y = x + random(5) - 200
+        points.push({ x: x, y: y })
+        ellipse(x, y, 5, 5)
+    }
+
+    var ransac = new RANSAC(points)
+    var consensus = ransac.analyze()
+    console.log(consensus)
+}

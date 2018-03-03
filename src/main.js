@@ -10,8 +10,9 @@ function setup() {
 }
 
 function draw() {
+    // frameRate(10)
+    // test()
     // noLoop()
-    frameRate(1)
     background(55)
     image(maze.map, 0, 0)
     robot.update()
