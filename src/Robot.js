@@ -40,7 +40,16 @@ function Robot(xPos, yPos, heading) {
                 }
             }
         }
-        // console.log(this.measurement)
+
+        // var points2D = []
+        // this.measurement.forEach(m => {
+        //     if (m) {
+        //         let point = convertPolarToCartesian(m.angle, m.dist)
+        //         points2D.push({ x: this.x + point.x, y: this.y + point.y })
+        //     }
+        // })
+        // var ransac = new RANSAC(points2D)
+        // ransac.analyze()
     }
 
     this.moveForward = function () {

@@ -32,7 +32,30 @@ function RANSAC(data) {
         }
     }
 
-    this.convertPolarToCartesian = function(rawData) {
-        return rawData.map(d => convertPolarToCartesian(d.angle, d.dist))
+    /** 
+     * Expects a list of points, e.g. [{x: 12, y: 23}, {x:6, y: 8}].
+     * Estimates a linear regression line: y=mx+b
+     * Reuturns a 2x1 matrix.
+     * The first element is the slope: m
+     * The second element is the intersection with y-axis: b
+    */
+    this.linearLeastSquares = function (points) {
+        var tmpA = []
+        var tmpY = []
+
+        for (var point of points) {
+            tmpA.push([point.x, 1])
+            tmpY.push(point.y)
+        }
+
+        var A = math.matrix(tmpA)
+        var Atrans = math.transpose(A)
+        var ATA = math.multiply(Atrans, A)
+        var y = math.matrix(tmpY)
+
+        // solve (A' * A)^-1 * A'*y
+        var inv = math.inv(ATA)
+        var result = math.multiply(inv, math.multiply(Atrans, y))
+        return result
     }
 }

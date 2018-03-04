@@ -8,8 +8,8 @@ function Maze(width, height) {
         
         // draw walls
         this.map.fill(220)
-        this.map.stroke(20)
-        for (let i = 0; i < 30; i++) {
+        this.map.noStroke()
+        for (let i = 0; i < this.amountOfBlocks; i++) {
             this.map.rect(
                 random(this.width),
                 random(this.height),
