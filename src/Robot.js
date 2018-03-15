@@ -6,7 +6,7 @@ function Robot(xPos, yPos, heading) {
     this.h = 15
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
-    this.nSensors = 50
+    this.nSensors = 100
     this.measurements = Array(this.nSensors).fill(undefined)
 
     /**
@@ -17,7 +17,7 @@ function Robot(xPos, yPos, heading) {
      * @param {Maze} maze 
      */
     this.measure = function (maze) {
-        this.measurement = Array(this.nSensors).fill(undefined)
+        this.measurements = Array(this.nSensors).fill(undefined)
         var startAngle = -this.fov / 2
         var angleIncrement = this.fov / this.nSensors
 
@@ -34,22 +34,33 @@ function Robot(xPos, yPos, heading) {
                 // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
                     let distance = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
-                    this.measurement[sensorIdx] = { angle: angle, dist: distance }
+                    this.measurements[sensorIdx] = { angle: angle, dist: distance }
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
                     break
                 }
             }
         }
-        var points2D = []
-        this.measurement.forEach(m => {
-            if (m) {
-                let point = convertPolarToCartesian(m.angle, m.dist)
-                points2D.push({ x: this.x + point.x, y: this.y + point.y })
-            }
+
+        var validMeasurements = []
+        this.measurements.forEach(m => {
+            if (m) { validMeasurements.push(m) }
         })
 
-        var ransac = new RANSAC(points2D)
-        ransac.analyze()
+        // find peaks in measurement
+        let threshold = 50
+        for (var sensorIdx = 1; sensorIdx < validMeasurements.length - 1; sensorIdx++) {
+            var distDiff1 = abs(validMeasurements[sensorIdx - 1].dist - validMeasurements[sensorIdx].dist)
+            var distDiff2 = abs(validMeasurements[sensorIdx + 1].dist - validMeasurements[sensorIdx].dist)
+            var distDiff = Math.max(distDiff1, distDiff2)
+
+            if (distDiff > threshold) {
+                var x = this.x + sin(validMeasurements[sensorIdx].angle) * validMeasurements[sensorIdx].dist
+                var y = this.y + cos(validMeasurements[sensorIdx].angle) * validMeasurements[sensorIdx].dist
+                fill(200)
+                ellipse(x, y, 10, 10)
+            }
+        }
+
     }
 
     this.moveForward = function () {

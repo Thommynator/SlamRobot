@@ -10,16 +10,9 @@ function setup() {
     image(maze.map, 0, 0)
     
     mapSLAM = new Map(width / 2, height)
-    for(var i=0; i<10; i++){
-        mapSLAM.addLandmark(new Landmark(random(width / 2), random(height)))
-    }
 }
 
 function draw() {
-    // frameRate(10)
-    // test()
-    // noLoop()
-    // frameRate(10)
     background(55)
     image(maze.map, 0, 0)
     
@@ -29,7 +22,7 @@ function draw() {
 
 
     var positions2D = []
-    robot.measurement.forEach(m => {
+    robot.measurements.forEach(m => {
         if (m) {
             let point = convertPolarToCartesian(m.angle, m.dist)
             positions2D.push({ x: robot.x + point.x, y: robot.y + point.y })
