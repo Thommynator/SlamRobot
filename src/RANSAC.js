@@ -91,7 +91,6 @@ function RANSAC(points) {
         var tmpY = []
 
         for (var point of points) {
-            // console.log('points', points)
             tmpA.push([point.x, 1])
             tmpY.push(point.y)
         }
