@@ -2,6 +2,7 @@ function Maze(width, height) {
     this.width = width
     this.height = height
     this.blocked = Array(this.width * this.height).fill(false)
+    this.amountOfBlocks = 15
     
     this.createMap = function () {
         this.map = createGraphics(this.width, this.height)

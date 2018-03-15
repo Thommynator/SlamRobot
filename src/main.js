@@ -7,7 +7,6 @@ function setup() {
     robot = new Robot(200, 200, 0)
     background(55)
     maze = new Maze(width / 2, height)
-    console.log(maze)
     image(maze.map, 0, 0)
     
     mapSLAM = new Map(width / 2, height)
@@ -17,6 +16,8 @@ function setup() {
 }
 
 function draw() {
+    // frameRate(10)
+    // test()
     // noLoop()
     // frameRate(10)
     background(55)

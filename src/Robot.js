@@ -6,7 +6,7 @@ function Robot(xPos, yPos, heading) {
     this.h = 15
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
-    this.nSensors = 100
+    this.nSensors = 50
     this.measurements = Array(this.nSensors).fill(undefined)
 
     /**
@@ -34,22 +34,22 @@ function Robot(xPos, yPos, heading) {
                 // collision with wall
                 if (maze.blocked[convertXYtoIndex(cellsBetween[j].x, cellsBetween[j].y, maze.width)]) {
                     let distance = dist(this.x, this.y, cellsBetween[j].x, cellsBetween[j].y)
-                    this.measurement[sensorIdx] = {angle: angle, dist: distance}
+                    this.measurement[sensorIdx] = { angle: angle, dist: distance }
                     ellipse(cellsBetween[j].x, cellsBetween[j].y, 5, 5)
                     break
                 }
             }
         }
+        var points2D = []
+        this.measurement.forEach(m => {
+            if (m) {
+                let point = convertPolarToCartesian(m.angle, m.dist)
+                points2D.push({ x: this.x + point.x, y: this.y + point.y })
+            }
+        })
 
-        // var points2D = []
-        // this.measurement.forEach(m => {
-        //     if (m) {
-        //         let point = convertPolarToCartesian(m.angle, m.dist)
-        //         points2D.push({ x: this.x + point.x, y: this.y + point.y })
-        //     }
-        // })
-        // var ransac = new RANSAC(points2D)
-        // ransac.analyze()
+        var ransac = new RANSAC(points2D)
+        ransac.analyze()
     }
 
     this.moveForward = function () {
