@@ -6,7 +6,7 @@ function Robot(xPos, yPos, heading) {
     this.h = 15
     this.sensorRange = 200.0
     this.fov = 2 * QUARTER_PI
-    this.nSensors = 100
+    this.nSensors = 50
     this.measurements = Array(this.nSensors).fill(undefined)
 
     /**
@@ -58,6 +58,7 @@ function Robot(xPos, yPos, heading) {
                 var y = this.y + cos(validMeasurements[sensorIdx].angle) * validMeasurements[sensorIdx].dist
                 fill(200)
                 ellipse(x, y, 10, 10)
+                mapSLAM.addLandmark(new Landmark(x,y))
             }
         }
 

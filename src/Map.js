@@ -4,7 +4,6 @@ function Map(mapWidth, mapHeight) {
     this.map = createGraphics(this.width, this.height)
     this.landmarks = []
     this.landmarksGraphic = createGraphics(this.width, this.height)
-
     this.maxTrajectoryLength = 500
     this.trajectory = []
 
@@ -21,13 +20,20 @@ function Map(mapWidth, mapHeight) {
     }
 
     /**
-     * Adds a new landmark to the map.
+     * Adds a new landmark to the map, if there is no other landmark nearby.
      * @param {Landmark} landmark 
      */
     this.addLandmark = function (landmark) {
+        let r = landmark.uncertainty * 3
+        for (var lm of this.landmarks) {
+            if (landmark.position.x >= lm.position.x - r
+                && landmark.position.x <= lm.position.x + r
+                && landmark.position.y >= lm.position.y - r
+                && landmark.position.y <= lm.position.y + r) {
+                return
+            }
+        }
         this.landmarks.push(landmark)
-        this.landmarksGraphic = createGraphics(this.width, this.height)
-        this.landmarks.forEach(mark => this.landmarksGraphic = mark.showOnMap(this.landmarksGraphic))
     }
 
     /**
@@ -56,6 +62,10 @@ function Map(mapWidth, mapHeight) {
         this.map.stroke(10)
         this.map.strokeWeight(10)
         this.map.rect(0, 0, this.width, this.height)
+
+        // draw landmarks
+        this.landmarksGraphic = createGraphics(this.width, this.height)
+        this.landmarks.forEach(mark => this.landmarksGraphic = mark.showOnMap(this.landmarksGraphic))
 
         image(this.landmarksGraphic, width / 2, 0)
         image(this.map, width / 2, 0)
